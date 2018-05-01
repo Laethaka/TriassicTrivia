@@ -3,6 +3,8 @@ var questionIndex = 0;
 var answersCorrect = 0;
 var answersWrong = 0;
 var answersTimedOut = 0;
+var timeLeft = 15;
+var timer;
 
 var questionArray = ['What dinosaur name means "fast thief?"', 'Which of the following dinosaurs had a giraffe-like neck?', 'What is the only dinosaur lineage to have survived the mass extinction?', 'How many claws did a velociraptor have on each hand?', 'What does "dinosaur" mean?', "What are the spikes on the end of a dinosaur's tail called?", 'An adult Stegosaurus had a brain the size of a... ?', 'Where was the velociraptor first discovered?'];
 var answerArray = [['Nanotyrannus', 'Stegosaurus', 'Velociraptor', 'Pteronodon'], ['Ankylosaurus', 'Brachiosaurus', 'Allosaurus', 'Torvosaurus'], ['Snakes', 'Lizards', 'Frogs', 'Birds'], ['Four', 'Three', 'Two', 'One'], ['Terrible lizard', 'Hungry lizard', 'Killer lizard', 'Evil lizard'], ['Chevrons', 'Kothumus', 'Thagomizer', 'Spinalis capitis'], ['Small car', 'Basketball', 'Lime', 'M&M'], ['China', 'Pakistan', 'Mongolia', 'USA']];
@@ -17,21 +19,47 @@ $('.startButton').on('click', function() { //START BUTTON CLICKED
     startNextQuestion();
 });
 
+//TIMER ITERATION
+function timerTick() {
+    timeLeft--;
+    if (timeLeft==0) { //QUESTION TIMED OUT
+        answersTimedOut++;
+        $('#reactionImage').attr('src', 'assets/images/timesUp.jpg').removeClass('invisible');
+        questionIndex++; //ITERATION
+        $('#questionBar').css('display', 'none');
+        $('.answerBar').css('display', 'none');  
+        $('.correctAnswer').removeClass('correctAnswer'); //CLEAR CORRECT ANSWER MARKER
+        clearInterval(timer);
+            setTimeout (function() {
+            startNextQuestion();
+            }, 3500)
+    }
+    $('#timeLeft').text(timeLeft);
+}
+
 //NEXT QUESTION REQUEST
 function startNextQuestion() {
     if (questionIndex === 8) { //GAME OVER MAN
+        console.log('triggered');
+        $('#reactionImage').addClass('invisible');
+        $('.timeBar').addClass('invisible');
         $('#firstAnswer, #secondAnswer, #thirdAnswer').removeClass('btn btn-warning');
-        $('#questionBar').text("All done! Here's how you did:")
+        $('#questionBar').css('display','block').text("All done! Here's how you did:");
+        $('.answerBar').css('display','inline-block');
         $('#firstAnswer').text(`Correct answers: ${answersCorrect}`);
         $('#secondAnswer').text(`Incorrect answers: ${answersWrong}`);
         $('#thirdAnswer').text(`Answers timed out: ${answersTimedOut}`);
         $('#fourthAnswer').text('Play again!');
         $('.answerBar').off('click');
         $('#fourthAnswer').on('click', function() {
-            //RESET GAME
+            //RESET GAME BUTTON GOES HERE
         })
     } else { //QUESTION & ANSWERS SETUP
-        $('#questionBar').css('display', 'inline-block');
+        $('.timeBar').removeClass('invisible');
+        timeLeft = 15;
+        $('#timeLeft').text(timeLeft);
+        timer = setInterval(timerTick, 1000);
+        $('#questionBar').css('display', 'block');
         $('#reactionImage').addClass('invisible');
         $('.answerBar').css('display', 'inline-block');
         $('#questionBar').text(questionArray[questionIndex]);
@@ -66,22 +94,21 @@ function startNextQuestion() {
                 break;
         };
     };
-    questionIndex++; //ITERATION
 };
 
 $('.answerBar').on('click', function() {
     if ($(this).attr('class') === 'answerBar btn btn-warning correctAnswer') { //CORRECT ANSWER CLICKED
         answersCorrect++;
-        $('#questionBar').css('display', 'none');
-        $('.answerBar').css('display', 'none');
         $('#reactionImage').attr('src', 'assets/images/correctImg.jpg').removeClass('invisible');
     } else { //WRONG ANSWER CLICKED
         answersWrong++;
-        $('#questionBar').css('display', 'none');
-        $('.answerBar').css('display', 'none');        
         $('#reactionImage').attr('src', 'assets/images/incorrectImg.jpg').removeClass('invisible');
     }
+    questionIndex++; //ITERATION
+    $('#questionBar').css('display', 'none');
+    $('.answerBar').css('display', 'none');  
     $('.correctAnswer').removeClass('correctAnswer'); //CLEAR CORRECT ANSWER MARKER
+    clearInterval(timer);
     setTimeout (function() {
         startNextQuestion();
     }, 2000)

@@ -15,6 +15,11 @@ body {
     font-size: 48px;
 }
 
+.timeBar {
+    font-size: 24px;
+    color: darkred;
+}
+
 .quizSection {
     font-size: 36px;
 }
@@ -27,4 +32,9 @@ body {
 
 #firstAnswer {
     margin-top: 5px;
+}
+
+.questionBar {
+    display: block;
+    margin-bottom: 10px;
 }
