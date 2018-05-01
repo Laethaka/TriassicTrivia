@@ -1,5 +1,5 @@
 //VARIABLES SETUP
-var questionsRemaining = 10;
+var questionsRemaining = 8;
 var answersCorrect = 0;
 var answersWrong = 0;
 var answersTimedOut = 0;
@@ -10,17 +10,19 @@ var answerArray = [['Nanotyrannus', 'Stegosaurus', 'Velociraptor', 'Pteronodon']
 
 //INITIAL START BUTTON
     $('#questionBar').text('Welcome... to Triassic Trivia').addClass('btn btn-warning btn-lg btn-block startButton').attr('type', 'button')
+
     $('.startButton').on('click', function() { //START BUTTON CLICKED
-        $('.startButton').removeClass('btn btn-warning btn-lg btn-block startButton').removeAttr('type')
+        $('#questionsBar').removeClass('btn btn-warning btn-lg btn-block startButton').removeAttr('type')
         startNextQuestion();
     });
 
 //NEXT QUESTION REQUEST
 function startNextQuestion() {
-    if (questionsRemaining === 0) { //GAME OVER MAN
+    var currentQuestion = questionArray[(8 - questionsRemaining)];
+    if (questionsRemaining === -1) { //GAME OVER MAN
 
     } else { //NEXT QUESTION
-
+        $('#questionsBar').text
         questionsRemaining--;
     };
 };
