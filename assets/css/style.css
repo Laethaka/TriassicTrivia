@@ -14,3 +14,17 @@ body {
 .titleBar {
     font-size: 48px;
 }
+
+.quizSection {
+    font-size: 36px;
+}
+
+.answerBar{
+    width: 60%;
+    font-size: 24px;
+    margin: 5px 0;
+}
+
+#firstAnswer {
+    margin-top: 5px;
+}
