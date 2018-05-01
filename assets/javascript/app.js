@@ -26,6 +26,7 @@ function startNextQuestion() {
         $('#secondAnswer').text(`Incorrect answers: ${answersWrong}`);
         $('#thirdAnswer').text(`Answers timed out: ${answersTimedOut}`);
         $('#fourthAnswer').text('Play again!');
+        $('.answerBar').off('click');
     } else { //QUESTION & ANSWERS SETUP
         $('#questionBar').text(questionArray[questionIndex]);
         $('#firstAnswer').text(answerArray[questionIndex][0]);
@@ -66,7 +67,7 @@ $('.answerBar').on('click', function() {
     if ($(this).attr('class') === 'answerBar btn btn-warning correctAnswer') { //CORRECT ANSWER CLICKED
         answersCorrect++;
     } else { //WRONG ANSWER CLICKED
-        if (questionIndex<9) {answersWrong++};
+        answersWrong++;
     }
     $('.correctAnswer').removeClass('correctAnswer'); //CLEAR CORRECT ANSWER MARKER
     startNextQuestion();
