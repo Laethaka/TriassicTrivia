@@ -12,7 +12,7 @@ var answerArray = [['Nanotyrannus', 'Stegosaurus', 'Velociraptor', 'Pteronodon']
 $('#questionBar').text('Welcome... to Triassic Trivia!!').addClass('btn btn-warning btn-lg btn-block startButton').attr('type', 'button')
 
 $('.startButton').on('click', function() { //START BUTTON CLICKED
-    $('#questionBar').removeClass('btn btn-warning btn-lg btn-block startButton').removeAttr('type')
+    $('#questionBar').removeClass('btn btn-warning btn-lg btn-block startButton').removeAttr('type').off('click');
     $('.answerBar').addClass('btn btn-warning');
     startNextQuestion();
 });
@@ -58,15 +58,15 @@ function startNextQuestion() {
                 $('#thirdAnswer').addClass('correctAnswer');
                 break;
         };
-        questionIndex++; //ITERATION
     };
+    questionIndex++; //ITERATION
 };
 
 $('.answerBar').on('click', function() {
     if ($(this).attr('class') === 'answerBar btn btn-warning correctAnswer') { //CORRECT ANSWER CLICKED
         answersCorrect++;
     } else { //WRONG ANSWER CLICKED
-        answersWrong++;
+        if (questionIndex<9) {answersWrong++};
     }
     $('.correctAnswer').removeClass('correctAnswer'); //CLEAR CORRECT ANSWER MARKER
     startNextQuestion();
