@@ -12,7 +12,8 @@ body {
 }
 
 .titleBar {
-    font-size: 48px;
+    font-size: 54px;
+    font-family: 'Skranji', cursive;
 }
 
 .timeBar {
