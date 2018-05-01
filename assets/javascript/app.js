@@ -27,7 +27,13 @@ function startNextQuestion() {
         $('#thirdAnswer').text(`Answers timed out: ${answersTimedOut}`);
         $('#fourthAnswer').text('Play again!');
         $('.answerBar').off('click');
+        $('#fourthAnswer').on('click', function() {
+            //RESET GAME
+        })
     } else { //QUESTION & ANSWERS SETUP
+        $('#questionBar').css('display', 'inline-block');
+        $('#reactionImage').addClass('invisible');
+        $('.answerBar').css('display', 'inline-block');
         $('#questionBar').text(questionArray[questionIndex]);
         $('#firstAnswer').text(answerArray[questionIndex][0]);
         $('#secondAnswer').text(answerArray[questionIndex][1]);
@@ -66,9 +72,17 @@ function startNextQuestion() {
 $('.answerBar').on('click', function() {
     if ($(this).attr('class') === 'answerBar btn btn-warning correctAnswer') { //CORRECT ANSWER CLICKED
         answersCorrect++;
+        $('#questionBar').css('display', 'none');
+        $('.answerBar').css('display', 'none');
+        $('#reactionImage').attr('src', 'assets/images/correctImg.jpg').removeClass('invisible');
     } else { //WRONG ANSWER CLICKED
         answersWrong++;
+        $('#questionBar').css('display', 'none');
+        $('.answerBar').css('display', 'none');        
+        $('#reactionImage').attr('src', 'assets/images/incorrectImg.jpg').removeClass('invisible');
     }
     $('.correctAnswer').removeClass('correctAnswer'); //CLEAR CORRECT ANSWER MARKER
-    startNextQuestion();
+    setTimeout (function() {
+        startNextQuestion();
+    }, 2000)
 })
