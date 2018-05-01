@@ -5,6 +5,7 @@ var answersWrong = 0;
 var answersTimedOut = 0;
 var timeLeft = 15;
 var timer;
+var timerRunning = false;
 
 var questionArray = ['What dinosaur name means "fast thief?"', 'Which of the following dinosaurs had a giraffe-like neck?', 'What is the only dinosaur lineage to have survived the mass extinction?', 'How many claws did a velociraptor have on each hand?', 'What does "dinosaur" mean?', "What are the spikes on the end of a dinosaur's tail called?", 'An adult Stegosaurus had a brain the size of a... ?', 'Where was the velociraptor first discovered?'];
 var answerArray = [['Nanotyrannus', 'Stegosaurus', 'Velociraptor', 'Pteronodon'], ['Ankylosaurus', 'Brachiosaurus', 'Allosaurus', 'Torvosaurus'], ['Snakes', 'Lizards', 'Frogs', 'Birds'], ['Four', 'Three', 'Two', 'One'], ['Terrible lizard', 'Hungry lizard', 'Killer lizard', 'Evil lizard'], ['Chevrons', 'Kothumus', 'Thagomizer', 'Spinalis capitis'], ['Small car', 'Basketball', 'Lime', 'M&M'], ['China', 'Pakistan', 'Mongolia', 'USA']];
@@ -12,10 +13,12 @@ var answerArray = [['Nanotyrannus', 'Stegosaurus', 'Velociraptor', 'Pteronodon']
 
 function gameReset() { //GAMEPLAY SECTION
     $('#questionBar').text('Welcome... to Triassic Trivia!!').addClass('btn btn-warning btn-lg btn-block startButton').attr('type', 'button').removeAttr('style');
-    $('#fourthAnswer').removeClass('btn btn-warning')
+    $('#fourthAnswer').removeClass('btn btn-warning');
+    $('.answerBar').addClass('invisible');
 
     $('.startButton').on('click', function() { //START BUTTON CLICKED
-        $('#questionBar').removeClass('btn btn-warning btn-lg btn-block startButton').removeAttr('type').off('click');
+        $('#questionBar').removeClass('btn btn-warning btn-lg btn-block startButton').removeAttr('type')
+        $('.startButton').off('click');
         $('.answerBar').addClass('btn btn-warning').removeClass('invisible');
         startNextQuestion();
     });
@@ -28,39 +31,24 @@ function gameReset() { //GAMEPLAY SECTION
             answersWrong++;
             $('#reactionImage').attr('src', 'assets/images/incorrectImg.jpg').css('display', 'inline-block');
         }
-        questionIndex++; //ITERATION
-        $('#questionBar').css('display', 'none');
-        $('.answerBar').css('display', 'none');  
-        $('.correctAnswer').removeClass('correctAnswer'); //CLEAR CORRECT ANSWER MARKER
-        clearInterval(timer);
+
+    questionIndex++; //ITERATION
+    $('#questionBar').css('display', 'none');
+    $('.answerBar').css('display', 'none');  
+    $('.correctAnswer').removeClass('correctAnswer'); //CLEAR CORRECT ANSWER MARKER
+    clearInterval(timer);
+    timerRunning = false;
         setTimeout (function() {
             startNextQuestion();
         }, 2000)
     });
 };
 
-//TIMER ITERATION
-function timerTick() {
-    timeLeft--;
-    if (timeLeft==0) { //QUESTION TIMED OUT
-        answersTimedOut++;
-        $('#reactionImage').attr('src', 'assets/images/timesUp.jpg').css('display', 'inline-block');
-        questionIndex++; //ITERATION
-        $('#questionBar').css('display', 'none');
-        $('.answerBar').css('display', 'none');  
-        $('.correctAnswer').removeClass('correctAnswer'); //CLEAR CORRECT ANSWER MARKER
-        clearInterval(timer);
-            setTimeout (function() {
-            startNextQuestion();
-            }, 3500)
-    }
-    $('#timeLeft').text(timeLeft);
-}
-
 //NEXT QUESTION REQUEST
 function startNextQuestion() {
-    if (questionIndex === 8) { //GAME OVER MAN
+    if (questionIndex === 8) { //GAME OVER MAN GAME OVER
         questionIndex = 0;
+        // clearInterval(timer);
         $('#reactionImage').css('display','none');
         $('.timeBar').addClass('invisible');
         $('#firstAnswer, #secondAnswer, #thirdAnswer').removeClass('btn btn-warning');
@@ -74,18 +62,18 @@ function startNextQuestion() {
         answersTimedOut = 0;
         $('#fourthAnswer').text('Play again!');
         $('.answerBar').off('click');
-        $('#fourthAnswer').on('click', function() {//RESET GAME BUTTON GOES HERE
-            $('#questionBar').text('Welcome... to Triassic Trivia!!').addClass('btn btn-warning btn-lg btn-block startButton').attr('type', 'button');
-            $('.answerBar').addClass('invisible');
-            $('.startButton').on('click', function() { //GAME RESTART
-                gameReset();
-            });
+        $('#fourthAnswer').on('click', function() { //GAME RESTARTING
+            $('#fourthAnswer').off('click');
+            gameReset();
         })
     } else { //QUESTION & ANSWERS SETUP
         $('.timeBar').removeClass('invisible');
         timeLeft = 15;
         $('#timeLeft').text(timeLeft);
-        timer = setInterval(timerTick, 1000);
+            if (!timerRunning) { //START TIMER
+                timer = setInterval(timerTick, 1000);
+                timerRunning = true;
+            }
         $('#questionBar').css('display', 'block');
         $('#reactionImage').css('display', 'none');
         $('.answerBar').css('display', 'inline-block');
@@ -123,23 +111,25 @@ function startNextQuestion() {
     };
 };
 
-// $('.answerBar').on('click', function() {
-//     if ($(this).attr('class') === 'answerBar btn btn-warning correctAnswer') { //CORRECT ANSWER CLICKED
-//         answersCorrect++;
-//         $('#reactionImage').attr('src', 'assets/images/correctImg.jpg').css('display','inline-block');
-//     } else { //WRONG ANSWER CLICKED
-//         answersWrong++;
-//         $('#reactionImage').attr('src', 'assets/images/incorrectImg.jpg').css('display', 'inline-block');
-//     }
-//     questionIndex++; //ITERATION
-//     $('#questionBar').css('display', 'none');
-//     $('.answerBar').css('display', 'none');  
-//     $('.correctAnswer').removeClass('correctAnswer'); //CLEAR CORRECT ANSWER MARKER
-//     clearInterval(timer);
-//     setTimeout (function() {
-//         startNextQuestion();
-//     }, 2000)
-// })
+//TIMER ITERATION
+function timerTick() {
+    console.log('tick')
+    timeLeft--;
+    if (timeLeft==0) { //QUESTION TIMED OUT
+        answersTimedOut++;
+        $('#reactionImage').attr('src', 'assets/images/timesUp.jpg').css('display', 'inline-block');
+        questionIndex++; //ITERATION
+        $('#questionBar').css('display', 'none');
+        $('.answerBar').css('display', 'none');  
+        $('.correctAnswer').removeClass('correctAnswer'); //CLEAR CORRECT ANSWER MARKER
+        clearInterval(timer);
+        timerRunning = false;
+            setTimeout (function() {
+            startNextQuestion();
+            }, 3500)
+    }
+    $('#timeLeft').text(timeLeft);
+}
 
 //GAME INITIALIZE
 gameReset();
